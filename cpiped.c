@@ -278,13 +278,17 @@ int main(int argc, char *argv[]) {
     
     if (bufused < capsize) {
       // Buffer is almost empty, don't send to pipe
-      mylog(LOG_INFO, "Filling buffer\n");
+      if(!silent) {
+      	mylog(LOG_INFO, "Filling buffer\n");
+      }
       fillbuf = 1;
     }
     
     if (bufused > (int)bufsize - 1 - capsize) {
       // Buffer is almost full, don't store captured samples
-      mylog(LOG_INFO, "Buffer full\n");
+      if(!silent) {
+	mylog(LOG_INFO, "Buffer full\n");
+      }
       buffull = 1;
     }
 
@@ -365,7 +369,7 @@ int main(int argc, char *argv[]) {
     }
     
     wrote = 0;
-    if (!fillbuf) {
+    if (!fillbuf && !silent) {
       bufstarttoend = bufsize - bufstart;
       if (writebytes <= bufstarttoend) { // No wrap required
         rc = write(writefd, buf + bufstart, writebytes);
